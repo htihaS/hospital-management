@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Employee {
+    id                 String     @id
+    ssn                String     @unique
+    name               String
+    address            String?
+    phone              String?
+    gender             String
+    salary             Float?
+    primaryPhysicianId String?
+    primaryPhysician   Physician? @relation(fields: [primaryPhysicianId], references: [id])
+    surgeries          Surgery[]
+}
+
+model Physician {
+    id        String
+    specialty String
+    grade     String?
+    employees Employee[]
+
+    @@id(id)
+}
+
+model Nurse {
+    id        String
+    years     Int
+    surgeries Surgery[]
+
+    @@id(id)
+}
+
+model Surgery {
+    id           String
+    name         String
+    type         String
+    location     String
+    specialNeeds String?
+    surgeonId    String
+    nurseId      String?
+    patientId    String
+    date         DateTime
+    duration     Int
+    surgeon      Employee @relation(fields: [surgeonId], references: [id])
+    nurse        Nurse?   @relation(fields: [nurseId], references: [id])
+    patient      Patient  @relation(fields: [patientId], references: [id])
+
+    @@id(id)
+}
+
+model Patient {
+    id          String
+    name        String
+    gender      String
+    dob         DateTime
+    address     String?
+    ssn         String        @unique
+    bloodType   String?
+    medicalData MedicalData[]
+    surgeries   Surgery[]
+    allergies   Allergy[]
+
+    @@id(id)
+}
+
+model MedicalData {
+    dataId    String
+    patientId String
+    type      String
+    date      DateTime
+    notes     String?
+    patient   Patient  @relation(fields: [patientId], references: [id])
+
+    @@id(dataId)
+}
+
+model Allergy {
+    allergyId String
+    patientId String
+    name      String
+    severity  String
+    reactions String?
+    frequency Int?
+    patient   Patient @relation(fields: [patientId], references: [id])
+
+    @@id(allergyId)
+}
