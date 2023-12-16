@@ -1,0 +1,1 @@
+export const employeeRole = ["NONE", "SURGEON", "NURSE"] as const
