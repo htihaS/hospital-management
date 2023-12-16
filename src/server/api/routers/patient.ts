@@ -68,7 +68,7 @@ function createPatientSchema() {
     return z.object({
         name: z.string(),
         gender: z.string(),
-        dob: z.string(),
+        dob: z.date(),
         address: z.string(),
         ssn: z.string(),
         bloodType: z.string().optional(),

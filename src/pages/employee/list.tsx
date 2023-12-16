@@ -13,10 +13,11 @@ import {
 import { api } from '~/utils/api'
 import Loader from '~/common/loader'
 import { Employee } from '@prisma/client'
+import { useRouter } from 'next/router'
 function employee() {
+    const router = useRouter()
     const [employeeData, setEmployeeData] = useState([] as Employee[])
     const { data } = api.employee.list.useQuery()
-    console.log("first employee", data)
     useEffect(() => {
         if (data) {
             setEmployeeData(data)
@@ -24,7 +25,7 @@ function employee() {
     }, [data])
 
     const handleCreateNewEmployees = () => {
-        alert("Create New Employee")
+        router.push('/employee/create')
     }
     return (
         <div className='justify-center'>
