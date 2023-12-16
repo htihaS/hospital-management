@@ -10,56 +10,59 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum employeeRole {
+    NONE
+    SURGEON
+    NURSE
+}
+
 model Employee {
-    id                 String     @id
-    ssn                String     @unique
+    id                 Int          @id @default(autoincrement())
+    ssn                String       @unique
     name               String
     address            String?
     phone              String?
     gender             String
     salary             Float?
-    primaryPhysicianId String?
-    primaryPhysician   Physician? @relation(fields: [primaryPhysicianId], references: [id])
+    role               employeeRole @default(NONE)
+    availability       Boolean?     @default(true)
+    primaryPhysicianId Int?
+    primaryPhysician   Physician?   @relation(fields: [primaryPhysicianId], references: [id])
     surgeries          Surgery[]
 }
 
 model Physician {
-    id        String
+    id        Int        @id @default(autoincrement())
     specialty String
     grade     String?
     employees Employee[]
-
-    @@id(id)
 }
 
 model Nurse {
-    id        String
+    id        Int       @id @default(autoincrement())
     years     Int
+    grade     String?
     surgeries Surgery[]
-
-    @@id(id)
 }
 
 model Surgery {
-    id           String
+    id           Int      @id @default(autoincrement())
     name         String
     type         String
     location     String
     specialNeeds String?
-    surgeonId    String
-    nurseId      String?
-    patientId    String
+    surgeonId    Int
+    nurseId      Int?
+    patientId    Int
     date         DateTime
     duration     Int
     surgeon      Employee @relation(fields: [surgeonId], references: [id])
     nurse        Nurse?   @relation(fields: [nurseId], references: [id])
     patient      Patient  @relation(fields: [patientId], references: [id])
-
-    @@id(id)
 }
 
 model Patient {
-    id          String
+    id          Int           @id @default(autoincrement())
     name        String
     gender      String
     dob         DateTime
@@ -69,29 +72,23 @@ model Patient {
     medicalData MedicalData[]
     surgeries   Surgery[]
     allergies   Allergy[]
-
-    @@id(id)
 }
 
 model MedicalData {
-    dataId    String
-    patientId String
+    id        Int      @id @default(autoincrement())
+    patientId Int
     type      String
     date      DateTime
     notes     String?
     patient   Patient  @relation(fields: [patientId], references: [id])
-
-    @@id(dataId)
 }
 
 model Allergy {
-    allergyId String
-    patientId String
+    id        Int     @id @default(autoincrement())
+    patientId Int
     name      String
     severity  String
     reactions String?
     frequency Int?
     patient   Patient @relation(fields: [patientId], references: [id])
-
-    @@id(allergyId)
 }

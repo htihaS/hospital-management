@@ -1,11 +1,13 @@
-import { type AppType } from "next/app";
+import React from 'react';
+import { ConfigProvider } from 'antd';
+import type { AppProps } from 'next/app';
+import theme from './theme/themeconfig';
 
-import { api } from "~/utils/api";
 
-import "~/styles/globals.css";
+const App = ({ Component, pageProps }: AppProps) => (
+  <ConfigProvider theme={theme}>
+    <Component {...pageProps} />
+  </ConfigProvider>
+);
 
-const MyApp: AppType = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />;
-};
-
-export default api.withTRPC(MyApp);
+export default App;
