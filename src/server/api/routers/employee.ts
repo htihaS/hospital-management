@@ -19,6 +19,18 @@ export const employeeRouter = createTRPCRouter({
             const employee = await db.employee.findFirst({
                 where: {
                     id: input.id
+                },
+                include: {
+                    primaryPhysician: {
+                        include: {
+                            appointments: {
+                                include: {
+                                    patient: true
+                                }
+                            }
+                        }
+                    },
+                    nurse: true
                 }
             });
             return employee;
@@ -26,7 +38,6 @@ export const employeeRouter = createTRPCRouter({
             throw new Error(error.message)
         }
     }),
-
 
     create: publicProcedure.input(createEmployeeSchema()).mutation(async ({ input }) => {
         try {
@@ -66,31 +77,24 @@ export const employeeRouter = createTRPCRouter({
         }
     }),
 
-    getAvailablePhysicians: publicProcedure
-        .query(async () => {
-            try {
-                const physiciansWithAppointmentCounts = await db.physician.findMany({
-                    select: {
-                        id: true,
-                        specialty: true,
-                        grade: true,
-                        availability: true,
-                        maxAppointments: true,
-                        appointments: {
-                            select: { id: true } // Select only the id to count the appointments
-                        },
-                        employee: true
-                    },
-                });
-
-                const availablePhysicians = physiciansWithAppointmentCounts.filter((physician) =>
-                    physician.appointments.length < (physician.maxAppointments ?? Infinity)
-                );
-                return availablePhysicians;
-            } catch (error: any) {
-                throw new Error(error.message)
-            }
-        }),
+    getAvailablePhysicians: publicProcedure.query(async () => {
+        try {
+            const physiciansWithAppointmentCounts = await db.physician.findMany({
+                select: {
+                    id: true,
+                    specialty: true,
+                    grade: true,
+                    availability: true,
+                    maxAppointments: true,
+                    appointments: true,
+                    employee: true
+                },
+            });
+            return physiciansWithAppointmentCounts;
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }),
 
 });
 
