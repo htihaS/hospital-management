@@ -65,6 +65,33 @@ export const employeeRouter = createTRPCRouter({
             throw new Error(error.message)
         }
     }),
+
+    getAvailablePhysicians: publicProcedure
+        .query(async () => {
+            try {
+                const physiciansWithAppointmentCounts = await db.physician.findMany({
+                    select: {
+                        id: true,
+                        specialty: true,
+                        grade: true,
+                        availability: true,
+                        maxAppointments: true,
+                        appointments: {
+                            select: { id: true } // Select only the id to count the appointments
+                        },
+                        employee: true
+                    },
+                });
+
+                const availablePhysicians = physiciansWithAppointmentCounts.filter((physician) =>
+                    physician.appointments.length < (physician.maxAppointments ?? Infinity)
+                );
+                return availablePhysicians;
+            } catch (error: any) {
+                throw new Error(error.message)
+            }
+        }),
+
 });
 
 function createEmployeeSchema() {

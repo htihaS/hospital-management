@@ -7,9 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/card"
+import DefaultLayout from "~/common/defaultLayout"
 
 
-export default function Home() {
+function Home() {
   const router = useRouter()
   return (
     <div>
@@ -34,3 +35,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default DefaultLayout(Home)

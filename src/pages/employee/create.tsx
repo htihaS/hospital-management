@@ -25,6 +25,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import ComponentLoader from '~/common/loader';
 import { useRouter } from 'next/router';
+import DefaultLayout from '~/common/defaultLayout';
 
 // Define the employee form schema
 const employeeFormSchema = z.object({
@@ -95,7 +96,7 @@ function EmployeeForm() {
                 <ComponentLoader />
             ) : (
                 <div className="border border-gray-300 m-10 justify-center rounded-lg p-10 bg-white shadow-sm">
-                    <h1 className="text-center text-gray-800 text-2xl mb-5 font-roboto">Create New Employee</h1>
+                    <h1 className="text-center text-gray-800 text-2xl mb-5 font-roboto">Add new Staff</h1>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-md">
                             <div className="grid w-full grid-cols-2 flex space-x-2">
@@ -196,15 +197,16 @@ function EmployeeForm() {
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent className="z-1000 rounded rounded-xl bg-blue-100 cursor-pointer">
-                                                    <SelectItem className="cursor-pointer hover:bg-gray-100" value="NONE">
-                                                        None
+                                                    <SelectItem className="cursor-pointer hover:bg-gray-100" value="SURGEON">
+                                                        Surgeon
                                                     </SelectItem>
                                                     <SelectItem className="cursor-pointer hover hover-bg-red-300" value="NURSE">
                                                         Nurse
                                                     </SelectItem>
-                                                    <SelectItem className="cursor-pointer hover:bg-gray-100" value="SURGEON">
-                                                        Surgeon
+                                                    <SelectItem className="cursor-pointer hover:bg-gray-100" value="OTHER">
+                                                        Other
                                                     </SelectItem>
+
                                                 </SelectContent>
                                             </Select>
                                         </FormItem>
@@ -236,4 +238,4 @@ function EmployeeForm() {
     );
 }
 
-export default EmployeeForm;
+export default DefaultLayout(EmployeeForm);

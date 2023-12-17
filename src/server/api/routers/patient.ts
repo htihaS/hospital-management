@@ -17,6 +17,19 @@ export const patientRouter = createTRPCRouter({
             const patient = await db.patient.findFirst({
                 where: {
                     id: input.id
+                },
+                include: {
+                    appointments: {
+                        include: {
+                            physcian: {
+                                include: {
+                                    employee: true
+                                }
+                            }
+                        }
+                    },
+                    medicalData: true,
+                    allergies: true
                 }
             });
             return patient;
@@ -28,7 +41,29 @@ export const patientRouter = createTRPCRouter({
     create: publicProcedure.input(createPatientSchema()).mutation(async ({ input }) => {
         try {
             const createEmployee = await db.patient.create({
-                data: input
+                data: {
+                    name: input.name,
+                    gender: input.gender,
+                    dob: input.dob,
+                    address: input.address,
+                    ssn: input.ssn,
+                    bloodType: input.bloodType,
+                    medicalData: {
+                        create: {
+                            type: input.medicalData.type,
+                            date: input.medicalData.date,
+                            notes: input.medicalData.notes
+                        }
+                    },
+                    allergies: {
+                        create: {
+                            name: input.allegries.allergyName,
+                            severity: input.allegries.severity,
+                            reactions: input.allegries.reactions,
+                            frequency: input.allegries.frequency
+                        }
+                    }
+                }
             })
             return createEmployee;
         } catch (error: any) {
@@ -62,6 +97,61 @@ export const patientRouter = createTRPCRouter({
             throw new Error(error.message)
         }
     }),
+
+    addMedicalData: publicProcedure
+        .input(z.object({
+            type: z.string(),
+            date: z.date(),
+            notes: z.string(),
+            patientId: z.number(),
+        }))
+        .mutation(async ({ input }) => {
+            try {
+                const result = await db.medicalData.create({
+                    data: {
+                        ...input
+                    }
+                });
+                return result;
+            } catch (error: any) {
+                throw new Error(error.message)
+            }
+        }),
+
+    addAllergies: publicProcedure
+        .input(z.object({ name: z.string(), severity: z.string(), reactions: z.string().optional(), frequency: z.string(), patientId: z.number() }))
+        .mutation(async ({ input }) => {
+            try {
+                const result = await db.allergy.create({
+                    data: {
+                        ...input
+                    }
+                });
+                return result;
+            } catch (error: any) {
+                throw new Error(error.message)
+            }
+        }),
+
+    bookAppointment: publicProcedure.input(z.object({ patientId: z.number(), physcianId: z.number(), date: z.date() })).mutation(async ({ input }) => {
+        try {
+            const createAppointment = await db.appointment.create({
+                data: {
+                    ...input,
+                },
+                include: {
+                    physcian: {
+                        include: {
+                            employee: true
+                        }
+                    }
+                }
+            })
+            return createAppointment;
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }),
 });
 
 function createPatientSchema() {
@@ -72,6 +162,17 @@ function createPatientSchema() {
         address: z.string(),
         ssn: z.string(),
         bloodType: z.string().optional(),
+        medicalData: z.object({
+            type: z.string(),
+            date: z.date(),
+            notes: z.string()
+        }),
+        allegries: z.object({
+            allergyName: z.string(),
+            severity: z.string(),
+            reactions: z.string(),
+            frequency: z.string()
+        })
     });
 }
 function updatePatientSchema() {

@@ -11,9 +11,9 @@ datasource db {
 }
 
 enum employeeRole {
-    NONE
     SURGEON
     NURSE
+    OTHER
 }
 
 model Employee {
@@ -24,29 +24,77 @@ model Employee {
     phone              String?
     gender             String
     salary             Float?
-    role               employeeRole @default(NONE)
-    availability       Boolean?     @default(true)
-    primaryPhysicianId Int?
-    primaryPhysician   Physician?   @relation(fields: [primaryPhysicianId], references: [id])
-    surgeries          Surgery[]
+    role               employeeRole @default(OTHER)
+    primaryPhysicianId Int?         @unique
+    primaryPhysician   Physician?   @relation(fields: [primaryPhysicianId], references: [id], onDelete: Cascade)
+    nurseId            Int?         @unique
+    nurse              Nurse?       @relation(fields: [nurseId], references: [id], onDelete: Cascade)
 }
 
 model Physician {
-    id        Int        @id @default(autoincrement())
-    specialty String
-    grade     String?
-    employees Employee[]
+    id              Int           @id @default(autoincrement())
+    specialty       String
+    grade           String?
+    employee        Employee?
+    availability    Boolean?      @default(true)
+    Surgery         Surgery[]
+    appointments    Appointment[]
+    maxAppointments Int?
 }
 
 model Nurse {
-    id        Int       @id @default(autoincrement())
-    years     Int
-    grade     String?
-    surgeries Surgery[]
+    id           Int       @id @default(autoincrement())
+    years        Int
+    grade        String?
+    availability Boolean?  @default(true)
+    employee     Employee?
+    Surgery      Surgery[]
+}
+
+model Patient {
+    id           Int           @id @default(autoincrement())
+    name         String
+    gender       String
+    dob          DateTime
+    address      String?
+    ssn          String        @unique
+    bloodType    String?
+    allergies    Allergy?
+    medicalData  MedicalData?
+    surgeries    Surgery[]
+    appointments Appointment[]
+}
+
+model MedicalData {
+    id        Int      @id @default(autoincrement())
+    patientId Int      @unique
+    type      String
+    date      DateTime
+    notes     String?
+    patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+}
+
+model Allergy {
+    id        Int     @id @default(autoincrement())
+    patientId Int     @unique
+    name      String
+    severity  String
+    reactions String?
+    frequency String?
+    patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+}
+
+model Appointment {
+    id         Int       @id @default(autoincrement())
+    date       DateTime
+    patientId  Int
+    patient    Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+    physcianId Int
+    physcian   Physician @relation(fields: [physcianId], references: [id], onDelete: Cascade)
 }
 
 model Surgery {
-    id           Int      @id @default(autoincrement())
+    id           Int       @id @default(autoincrement())
     name         String
     type         String
     location     String
@@ -56,39 +104,7 @@ model Surgery {
     patientId    Int
     date         DateTime
     duration     Int
-    surgeon      Employee @relation(fields: [surgeonId], references: [id])
-    nurse        Nurse?   @relation(fields: [nurseId], references: [id])
-    patient      Patient  @relation(fields: [patientId], references: [id])
-}
-
-model Patient {
-    id          Int           @id @default(autoincrement())
-    name        String
-    gender      String
-    dob         DateTime
-    address     String?
-    ssn         String        @unique
-    bloodType   String?
-    medicalData MedicalData[]
-    surgeries   Surgery[]
-    allergies   Allergy[]
-}
-
-model MedicalData {
-    id        Int      @id @default(autoincrement())
-    patientId Int
-    type      String
-    date      DateTime
-    notes     String?
-    patient   Patient  @relation(fields: [patientId], references: [id])
-}
-
-model Allergy {
-    id        Int     @id @default(autoincrement())
-    patientId Int
-    name      String
-    severity  String
-    reactions String?
-    frequency Int?
-    patient   Patient @relation(fields: [patientId], references: [id])
+    surgeon      Physician @relation(fields: [surgeonId], references: [id], onDelete: Cascade)
+    nurse        Nurse?    @relation(fields: [nurseId], references: [id], onDelete: Cascade)
+    patient      Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
