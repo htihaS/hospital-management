@@ -14,6 +14,40 @@ export const employeeRouter = createTRPCRouter({
         }
     }),
 
+    doctorList: publicProcedure.query(async () => {
+        try {
+            const doctors = await db.physician.findMany({
+                include: {
+                    employee: true
+                }
+            });
+            return doctors;
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }),
+
+    nurseList: publicProcedure.query(async () => {
+        try {
+            const nurseList = await db.nurse.findMany({
+                include: {
+                    employee: true
+                }
+            });
+            return nurseList;
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }),
+    roomList: publicProcedure.query(async () => {
+        try {
+            const rooms = await db.rooms.findMany();
+            return rooms;
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }),
+
     show: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
         try {
             const employee = await db.employee.findFirst({

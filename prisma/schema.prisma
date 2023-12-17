@@ -16,6 +16,12 @@ enum employeeRole {
     OTHER
 }
 
+enum RoomTypes {
+    STANDARD
+    DELUX
+    PREMIUM
+}
+
 model Employee {
     id                 Int          @id @default(autoincrement())
     ssn                String       @unique
@@ -107,4 +113,17 @@ model Surgery {
     surgeon      Physician @relation(fields: [surgeonId], references: [id], onDelete: Cascade)
     nurse        Nurse?    @relation(fields: [nurseId], references: [id], onDelete: Cascade)
     patient      Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+    Room         Rooms?
+}
+
+model Rooms {
+    id              Int      @id @default(autoincrement())
+    occupiedDate    DateTime
+    roomNumber      Int
+    Capacity        Int
+    occupancyStatus Boolean  @default(false)
+    floor           Int
+    surgeryId       Int?      @unique
+    surgery         Surgery?  @relation(fields: [surgeryId], references: [id], onDelete: Cascade)
+    rent            Int?
 }

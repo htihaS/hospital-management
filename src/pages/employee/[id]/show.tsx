@@ -53,7 +53,6 @@ function EmployeeDetails() {
             setEmployee(data)
         }
     }, [data])
-    console.log("EMployee", employee)
     return (
         <>
             {(isLoading || loading) ? <ComponentLoader /> :

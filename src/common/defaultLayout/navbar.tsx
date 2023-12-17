@@ -14,6 +14,7 @@ export default function Navbar() {
         { title: "Home", path: "/" },
         { title: "Staff", path: "/employee/list" },
         { title: "Patients", path: "/patient/list" },
+        { title: "Surgeries", path: "/surgery/list" },
     ]
 
     return (

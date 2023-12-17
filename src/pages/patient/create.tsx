@@ -113,7 +113,8 @@ function PatientForm() {
                 <div className="rounded rounded-xl shadow-xl border border-gray-300 m-10 justify-center rounded-lg p-10 bg-white shadow-sm">
                     <h1 className="mb-5 text-center scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                         Create new Patient
-                    </h1>                    <Form {...form}>
+                    </h1>
+                    <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-md">
                             <div className="grid w-full grid-cols-2 flex space-x-2">
                                 <FormField
