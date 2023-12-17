@@ -39,6 +39,7 @@ export const employeeRouter = createTRPCRouter({
             throw new Error(error.message)
         }
     }),
+
     roomList: publicProcedure.query(async () => {
         try {
             const rooms = await db.rooms.findMany();
@@ -76,7 +77,26 @@ export const employeeRouter = createTRPCRouter({
     create: publicProcedure.input(createEmployeeSchema()).mutation(async ({ input }) => {
         try {
             const createEmployee = await db.employee.create({
-                data: input
+                data: {
+                    ...input,
+                    ...(input.role === "SURGEON" && {
+                        primaryPhysician: {
+                            create: {
+                                grade: "A",
+                                specialty: "MBBS",
+                                maxAppointments: 20
+                            }
+                        }
+                    }),
+                    ...(input.role === "NURSE" && {
+                        nurse: {
+                            create: {
+                                grade: "A",
+                                years: 2
+                            }
+                        }
+                    })
+                }
             })
             return createEmployee;
         } catch (error: any) {

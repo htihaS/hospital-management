@@ -33,7 +33,7 @@ function employee() {
             {isLoading ? <ComponentLoader /> :
                 <>
                     <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                        {`Staff - ${data && data.length}`}
+                        {`Employee - ${data && data.length}`}
                     </h1>
                     <Button className="mt-5 bg-blue-500 text-white rounded rounded-xl justify-end" variant="outline" onClick={handleCreateNewEmployees}>Add</Button>
                     <div className='rounded rounded-xl'>

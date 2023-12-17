@@ -28,12 +28,12 @@ function EmployeeDetails() {
             })
             if (deletedEmployee) {
                 toast({
-                    title: "Patient deleted successfully"
+                    title: "Employee deleted successfully"
                 })
-                router.push('/patient/list')
+                router.push('/employee/list')
             } else {
                 toast({
-                    title: "Cannot delete Patient"
+                    title: "Cannot delete Employee"
                 })
             }
         } catch (error) {

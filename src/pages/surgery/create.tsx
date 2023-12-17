@@ -175,9 +175,9 @@ function EmployeeForm() {
                                     className="mt-1 p-2 rounded rounded-xl border border-gray-300 w-full"
                                 >
                                     <option value="" disabled>Select</option>
-                                    {patientList.map((patient) => (
-                                        <option key={patient.id} value={patient.id}>
-                                            {patient.name}
+                                    {patientList.map((patient: any) => (
+                                        <option key={patient?.id} value={patient?.id}>
+                                            {patient?.name}
                                         </option>
                                     ))}
                                 </select>
@@ -193,8 +193,8 @@ function EmployeeForm() {
                                 >
                                     <option value="" disabled>Select</option>
                                     {doctorList.map((doctor: any) => (
-                                        <option key={doctor.id} value={doctor.id}>
-                                            {doctor.employee.name}
+                                        <option key={doctor?.id} value={doctor?.id}>
+                                            {doctor?.employee?.name}
                                         </option>
                                     ))}
                                 </select>
@@ -212,8 +212,8 @@ function EmployeeForm() {
                                 >
                                     <option value="" disabled>Select</option>
                                     {nurseList.map((nurse: any) => (
-                                        <option key={nurse.id} value={nurse.id}>
-                                            {nurse.employee.name}
+                                        <option key={nurse?.id} value={nurse?.id}>
+                                            {nurse?.employee?.name}
                                         </option>
                                     ))}
                                 </select>
@@ -228,9 +228,9 @@ function EmployeeForm() {
                                     className="mt-1 p-2 rounded rounded-xl border border-gray-300 w-full"
                                 >
                                     <option value="" disabled>Select</option>
-                                    {roomsList.map((room) => (
-                                        <option key={room.id} value={room.id}>
-                                            {room.roomNumber}
+                                    {roomsList.map((room: any) => (
+                                        <option key={room?.id} value={room?.id}>
+                                            {room?.roomNumber}
                                         </option>
                                     ))}
                                 </select>

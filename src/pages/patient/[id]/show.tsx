@@ -39,7 +39,7 @@ function PatientDetails() {
     const deletePatient = api.patient.delete.useMutation()
     const [loading, setLoading] = useState(false)
     const [patient, setPatient] = useState({} as any)
-    const [doctors, setDoctors] = useState([] as Physician[])
+    const [doctors, setDoctors] = useState([] as any[])
     const [appointmentDetails, setAppointmentDetails] = useState({
         doctorId: '',
         date: ''
@@ -156,7 +156,7 @@ function PatientDetails() {
                                             <>
                                                 <option key={0} value={""}>{'Select'}</option>
                                                 {doctors.map(doctor => (
-                                                    <option key={doctor.id} value={doctor.id}>{doctor.specialty}</option>
+                                                    <option key={doctor.id} value={doctor.id}>{doctor?.employee?.name}</option>
                                                 ))}
                                             </>
                                         </select>

@@ -96,7 +96,7 @@ function EmployeeForm() {
                 <ComponentLoader />
             ) : (
                 <div className="border border-gray-300 m-10 justify-center rounded-lg p-10 bg-white shadow-sm">
-                    <h1 className="text-center text-gray-800 text-2xl mb-5 font-roboto">Add new Staff</h1>
+                    <h1 className="text-center text-gray-800 text-2xl mb-5 font-roboto">Add new Employee</h1>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-md">
                             <div className="grid w-full grid-cols-2 flex space-x-2">

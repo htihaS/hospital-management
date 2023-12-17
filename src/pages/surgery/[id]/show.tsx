@@ -74,7 +74,8 @@ function EmployeeDetails() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div><strong>ID: </strong> {surgery?.id}</div>
                                     <div><strong>patient name: </strong>{surgery?.patient?.name}</div>
-                                    <div><strong>Name: </strong> {surgery?.name}</div>
+                                    <div><strong>Room number: </strong> {surgery?.Room?.roomNumber}</div>
+                                    <div><strong>Surgery Name: </strong> {surgery?.name}</div>
                                     <div><strong>Type: </strong> {surgery?.type}</div>
                                     <div><strong>Location: </strong> {surgery?.location}</div>
                                     <div><strong>Duration: </strong> {surgery?.duration}</div>
