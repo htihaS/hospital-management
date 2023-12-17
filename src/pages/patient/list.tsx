@@ -5,7 +5,6 @@ import {
     TableBody,
     TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -13,22 +12,26 @@ import {
 import { Patient } from '@prisma/client'
 import { api } from '~/utils/api'
 import { dateConversion } from '~/utils'
-export default function Patient() {
+import { useRouter } from 'next/router'
+import DefaultLayout from '~/common/defaultLayout'
+import ComponentLoader from '~/common/loader'
+function Patient() {
     const [patientData, setPatientData] = useState([] as Patient[])
-    const { data } = api.patient.list.useQuery()
+    const router = useRouter()
+    const { data, isLoading } = api.patient.list.useQuery()
     useEffect(() => {
         if (data) {
             setPatientData(data)
         }
     }, [data])
     const handleCreateNewEmployees = () => {
-        alert("Create New Patient")
+        router.push('/patient/create')
     }
     return (
-        <>
-            <Button className="ml-5" variant="outline" onClick={handleCreateNewEmployees}>Creat Patient</Button>
+        <div className='ml-25'>
+            <Button className="mt-5 rounded rounded-xl" variant="outline" onClick={handleCreateNewEmployees}>Create Patient</Button>
 
-            <Table className="w-50">
+            {isLoading ? <ComponentLoader /> : <Table className="mt-10 mr-10 rounded rounded-xl w-[80vw] border border-blue-black">
                 <TableCaption>A list of Patients.</TableCaption>
                 <TableHeader>
                     <TableRow>
@@ -40,7 +43,7 @@ export default function Patient() {
                 </TableHeader>
                 <TableBody>
                     {patientData.map((patient: Patient) => (
-                        <TableRow key={patient.id}>
+                        <TableRow className='cursor-pointer hover:bg-gray-300' key={patient.id} onClick={() => { router.push(`/patient/${patient.id}/show`) }}>
                             <TableCell className="font-medium">{patient.name}</TableCell>
                             <TableCell>{patient.ssn}</TableCell>
                             <TableCell>{dateConversion(patient.dob)}</TableCell>
@@ -48,7 +51,8 @@ export default function Patient() {
                         </TableRow>
                     ))}
                 </TableBody>
-               
-            </Table>
-        </>)
+
+            </Table>}
+        </div>)
 }
+export default DefaultLayout(Patient)

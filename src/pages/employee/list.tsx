@@ -29,9 +29,11 @@ function employee() {
     }
     return (
         <div className='justify-center'>
-            <Button className="ml-5" variant="outline" onClick={handleCreateNewEmployees}>Creat Employee</Button>
+            <Button className="ml-5 rounded rounded-xl" variant="outline" onClick={handleCreateNewEmployees}>Create Employee</Button>
             <Table className="w-50">
-                <TableCaption>A list of Employees</TableCaption>
+                <TableCaption><blockquote className="mt-6 border-l-2 pl-6 italic">
+                    "List of Employees"
+                </blockquote></TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[100px]">Name</TableHead>
@@ -43,7 +45,7 @@ function employee() {
                 </TableHeader>
                 <TableBody>
                     {employeeData.map((employee: Employee) => (
-                        <TableRow key={employee.id}>
+                        <TableRow className='cursor-pointer hover:bg-gray-300' key={employee.id} onClick={() => { router.push(`/employee/${employee.id}/show`) }}>
                             <TableCell className="font-medium">{employee.name}</TableCell>
                             <TableCell>{employee.ssn}</TableCell>
                             <TableCell>{employee.phone}</TableCell>
